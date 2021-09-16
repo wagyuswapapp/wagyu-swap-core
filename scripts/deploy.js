@@ -22,8 +22,8 @@ function save(chainId, name, value) {
 
 async function adjustPerifpherySourceCode(address) {
 
-  const PATH_GET = "../pancake-swap-periphery/contracts/libraries/PancakeLibraryTemplate.sol"
-  const PATH_PUT = "../pancake-swap-periphery/contracts/libraries/PancakeLibrary.sol"
+  const PATH_GET = "../wagyu-swap-periphery/contracts/libraries/PancakeLibraryTemplate.sol"
+  const PATH_PUT = "../wagyu-swap-periphery/contracts/libraries/PancakeLibrary.sol"
 
   const contract = await ethers.getContractAt("PancakeFactory", address)
 
@@ -68,7 +68,7 @@ async function main() {
 
   const signers = await ethers.getSigners();
 
-  const { chainId } = await ethers.provider.getNetwork();
+  //const { chainId } = await ethers.provider.getNetwork();
   
   PancakeFactory = await deploy("PancakeFactory", [signers[0]._address])
 
