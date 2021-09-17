@@ -25,11 +25,11 @@ async function adjustPerifpherySourceCode(address) {
   const PATH_GET = "../wagyu-swap-periphery/contracts/libraries/PancakeLibraryTemplate.sol"
   const PATH_PUT = "../wagyu-swap-periphery/contracts/libraries/PancakeLibrary.sol"
 
-  const contract = await ethers.getContractAt("PancakeFactory", address)
+  const contract = await ethers.getContractAt("WagyuFactory", address)
 
   const INIT_CODE_PAIR_HASH = await contract.INIT_CODE_PAIR_HASH()
 
-  console.log(INIT_CODE_PAIR_HASH);
+  //console.log(INIT_CODE_PAIR_HASH);
 
   const fs = require("fs");
 
@@ -66,13 +66,11 @@ async function deploy(name, args=[]) {
 async function main() {
   // We get the contract to deploy
 
-  const signers = await ethers.getSigners();
-
-  //const { chainId } = await ethers.provider.getNetwork();
+  const admins = JSON.parse(require("fs").readFileSync('../wagyu-addresses/admins.json', 'utf8'))
   
-  PancakeFactory = await deploy("PancakeFactory", [signers[0]._address])
+  WagyuFactory = await deploy("WagyuFactory", [admins._devaddr])
 
-  await adjustPerifpherySourceCode(PancakeFactory)
+  await adjustPerifpherySourceCode(WagyuFactory)
 
 }
 
