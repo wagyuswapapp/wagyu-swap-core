@@ -1,9 +1,8 @@
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function sleep(fn, ...args) {
-  await timeout(3000);
-  return fn(...args);
+async function sleep() {
+  return await timeout(10000);
 }
 
 function save(chainId, name, value) {
@@ -44,6 +43,7 @@ async function adjustPerifpherySourceCode(address) {
 
   save(chainId, "PancakeFactory_Init_Code_Hash", INIT_CODE_PAIR_HASH);
 
+  await sleep()
   return true
 
 }
@@ -59,6 +59,7 @@ async function deploy(name, args=[]) {
   
   save(chainId, name, token.address); 
   console.log("deployed ", name, token.address);
+  await sleep()
   return token.address
 
 }

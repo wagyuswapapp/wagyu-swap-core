@@ -22,15 +22,17 @@ function save(chainId, name, value) {
 
 
 
-async function createTestPool(name) {
-  console.log("create LP pool " + name)
+async function createRealPool(address) {
+  console.log("create LP pool " + address)
   const signers = await ethers.getSigners();
   const nonce = await ethers.provider.getTransactionCount(signers[0]._address)
   const { chainId } = await ethers.provider.getNetwork();
   //const blockNumber = await ethers.provider.getBlockNumber();
   const data = get(chainId)
   const tokenA = data.WVLX
-  const tokenB = data[name]
+  const tokenB = address
+
+  //console.log("WagyuFactory", data.WagyuFactory)
 
   if (tokenA == tokenB)
     throw "token names should be different"
@@ -41,8 +43,14 @@ async function createTestPool(name) {
   const result = await PoolAddress.wait(1)
   const event = result.events.find((x)=> x.event == "PairCreated");
   
-  save(chainId, "VLX_" + name + "_LP", { pair: event.args.pair, tokenA, tokenB } );
+  const Token = await ethers.getContractAt("PancakeERC20", address);
+  
+  const symbol = await Token.symbol();
+
+  save(chainId, "VLX_" + symbol + "_LP", { pair: event.args.pair, tokenA, tokenB } );
+
   await sleep()
+
   return true
 }
 
@@ -58,17 +66,11 @@ function get(chainId) {
 
 async function main() {
 
-  const admins = JSON.parse(require("fs").readFileSync('../wagyu-addresses/admins.json', 'utf8'))
-
   const { chainId } = await ethers.provider.getNetwork();
   
+  const data = get(chainId);
 
-  const defaultTokens = admins.defaultTokens[chainId.toString()]
-
-
-  for (var j=0; j < defaultTokens.length; j++) {
-      await createTestPool(defaultTokens[j]);
-  }
+  await createRealPool(data.WAGToken)
   
 }
 

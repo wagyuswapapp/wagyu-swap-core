@@ -1,5 +1,10 @@
 
-
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function sleep() {
+  return await timeout(10000);
+}
 
 function save(chainId, name, value) {
 
@@ -26,7 +31,7 @@ async function createRealPool(address) {
   const data = get(chainId)
   const tokenA = data.WVLX
   const tokenB = address
-
+  await sleep()
   console.log("WagyuFactory", data.WagyuFactory)
 
   if (tokenA == tokenB)
